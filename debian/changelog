@@ -1,0 +1,40 @@
+comgt (0.32-2) unstable; urgency=low
+
+  * Updated Conflicts and Replaces fields which were referring to the
+    wrong version (Closes: #545528).
+  * Bumped Standards-Version to 3.8.3.
+  * Fixed "hyphen-used-as-minus-sign" messages from lintian in manpage.
+  * Fixed copyright file.
+
+ -- Andreas "Jimmy" Gredler <jimmy@g-tec.co.at>  Tue, 08 Sep 2009 15:37:12 +0200
+
+comgt (0.32-1) unstable; urgency=low
+
+  * New upstream release.
+  * Ackowledge NMU (Closes: #464979, #449925).
+  * Installed sigmon script in binary path and added shebang line (as it
+    always has been in former upstream releases).
+  * For trademark reasons the program name has been changed from gcom to
+    comgt.
+  * A couple of new scripts are installed in /etc/comgt/scripts. 
+  * Switched to debhelper7.
+  * Bumped Standards-Version to 3.8.1.
+  * Added field for homepage in debian/control.
+  * Updated debian/watch to point to the right location.
+
+ -- Andreas "Jimmy" Gredler <jimmy@g-tec.co.at>  Tue, 04 Aug 2009 16:22:33 +0200
+
+gcom (0.3-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix bashism. Closes: #464979
+  * Point watch file to new upstream location. Closes: #449925
+
+ -- Raphael Geissert <geissert@debian.org>  Sun, 05 Jul 2009 20:40:59 -0500
+
+gcom (0.3-1) unstable; urgency=low
+
+  * Initial release Closes: #353802
+
+ -- Andreas "Jimmy" Gredler <jimmy@g-tec.co.at>  Mon, 20 Feb 2006 21:07:36 +0100
+

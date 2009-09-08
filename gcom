@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "For trademark reasons the program name has been changed from gcom
+to comgt! Please use the comgt binary."

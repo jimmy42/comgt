@@ -25,12 +25,12 @@
 
 LIB     = -L/usr/local/lib
 INC     = -I/usr/local/include
-EXE	= /usr/local/bin
-MAN     = /usr/share/man/man1
-CPROG	= comgt
-SCRIPTPATH = /etc/comgt/
+EXE     = $(DESTDIR)/usr/bin
+MAN     = $(DESTDIR)/usr/share/man/man1
+CPROG   = comgt
+SCRIPTPATH = $(DESTDIR)/etc/comgt/
 SCRIPTSRC = ./scripts/
-BIN     = $(CPROG) 
+BIN     = $(CPROG) sigmon
 MANP	= comgt.1 sigmon.1
 
 CFLAGS  = -c
@@ -52,9 +52,8 @@ install:
 	chmod u+rw $(SCRIPTPATH)
 	chmod a+x $(SCRIPTPATH)
 	cp -f $(SCRIPTSRC)* $(SCRIPTPATH)
-	chmod a-w $(SCRIPTPATH)*
+	chmod a-wx $(SCRIPTPATH)*
 	chmod u+rw $(SCRIPTPATH)*
-	chmod a+x $(SCRIPTPATH)*
 
 
 

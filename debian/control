@@ -1,0 +1,26 @@
+Source: comgt
+Section: net
+Priority: optional
+Maintainer: Andreas "Jimmy" Gredler <jimmy@g-tec.co.at>
+Build-Depends: debhelper (>= 7.0.0)
+Standards-Version: 3.8.3
+Homepage: http://www.pharscape.org/
+
+Package: comgt
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: gcom (<< 0.32-1)
+Replaces: gcom (<< 0.32-1)
+Description: Option GlobeTrotter and Vodafone datacard control tool
+ Comgt is a scripting language interpreter useful for establishing
+ communications on serial lines and through PCMCIA modems as well as
+ GPRS and 3G datacards. Works with Option GlobeTrotter
+ GPRS/EDGE/3G/HSDPA and Vodafone 3G/GPRS datacards.
+
+Package: gcom
+Architecture: all
+Depends: ${misc:Depends}, comgt
+Description: datacard control tool - transitional package
+ This is a transitional package from gcom to comgt, because there was a
+ name change for trademark reasons.
+ It can be safely removed.
