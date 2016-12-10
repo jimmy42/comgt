@@ -1,0 +1,309 @@
+Description: Necessary changes to build the package
+ This patch was created to switch from the 1.0 to 3.0 source format and
+ includes all the changes necessary to build the package in this single
+ patch. It was created by running "dpkg-source -b --single-debian-patch
+ comgt"
+Author: Andreas "Jimmy" Gredler <jimmy@grml.org>
+--- comgt-0.32.orig/Makefile
++++ comgt-0.32/Makefile
+@@ -25,12 +25,12 @@
+ 
+ LIB     = -L/usr/local/lib
+ INC     = -I/usr/local/include
+-EXE	= /usr/local/bin
+-MAN     = /usr/share/man/man1
+-CPROG	= comgt
+-SCRIPTPATH = /etc/comgt/
++EXE     = $(DESTDIR)/usr/bin
++MAN     = $(DESTDIR)/usr/share/man/man1
++CPROG   = comgt
++SCRIPTPATH = $(DESTDIR)/etc/comgt/
+ SCRIPTSRC = ./scripts/
+-BIN     = $(CPROG) 
++BIN     = $(CPROG) sigmon
+ MANP	= comgt.1 sigmon.1
+ 
+ CFLAGS  = -c
+@@ -52,9 +52,8 @@ install:
+ 	chmod u+rw $(SCRIPTPATH)
+ 	chmod a+x $(SCRIPTPATH)
+ 	cp -f $(SCRIPTSRC)* $(SCRIPTPATH)
+-	chmod a-w $(SCRIPTPATH)*
++	chmod a-wx $(SCRIPTPATH)*
+ 	chmod u+rw $(SCRIPTPATH)*
+-	chmod a+x $(SCRIPTPATH)*
+ 
+ 
+ 
+--- comgt-0.32.orig/comgt.1
++++ comgt-0.32/comgt.1
+@@ -1,7 +1,6 @@
+ .\" Paul Hardwick 
+ .\" paul@peck.org.uk
+ .TH comgt 1 "20 October, 2006"
+-.LO 1
+ .SH NAME
+ comgt  \- Option GlobeTrotter GPRS/EDGE/3G/HSDPA  and Vodafone 3G/GPRS datacard control tool
+ .SH SYNOPSIS
+@@ -19,7 +18,7 @@ set the device to be used to communicate
+ If not specified then comgt trys
+ .I /dev/noz2, /dev/ttyUSB2
+ and then 
+-.I/dev/modem
++.I /dev/modem
+ .PP
+ .in +5
+ .B \-e 
+@@ -134,7 +133,7 @@ If you don\'t specify a port with the
+ option then 
+ .I /dev/modem 
+ is assumed.
+-If the -s switch is not used then this default script is run before any external script.
++If the \-s switch is not used then this default script is run before any external script.
+ 
+ .in -5
+ .I comgt help 
+@@ -256,7 +255,7 @@ line reading:
+ .in +5
+ .nf
+ pppd connect \\ 
+-     \'chat -v "" ATDT5551212 CONNECT "" ogin: ppp \\
++     \'chat \-v "" ATDT5551212 CONNECT "" ogin: ppp \\
+      word: whitewater\' \\
+      /dev/cua1 38400 debug crtscts modem defaultroute
+ .fi
+@@ -268,7 +267,7 @@ read:
+ .PP
+ .in +5
+ .nf
+-pppd connect \'comgt -s /root/scripts/isp.scr\' /dev/cua1 38400 \\
++pppd connect \'comgt \-s /root/scripts/isp.scr\' /dev/cua1 38400 \\
+      debug crtscts modem defaultroute
+ .fi
+ .in -5
+@@ -292,13 +291,13 @@ When the verbose option is turned on,
+ .B comgt 
+ reports everthing on
+ the standard error channel.
+-If turned on from the command line (-v), the output contains 4 sections.
++If turned on from the command line (\-v), the output contains 4 sections.
+ .PP
+ - Command line argument actions
+ .in +2
+ These are actions taken because they were specified from the command 
+-line, such as opening a communication device (-d), etc...
+-For these to be output, you must specify -v as the first argument.
++line, such as opening a communication device (\-d), etc...
++For these to be output, you must specify \-v as the first argument.
+ .in -2
+ .PP
+ - List of arguments
+@@ -312,7 +311,7 @@ script really sees.
+ - Script list
+ .in +2
+ A list of the script to execute.  This may be a concatenation of 
+-the default internal script, unless this is suppressed by the -s
++the default internal script, unless this is suppressed by the \-s
+ option, and a script file.  Every line is listed with its 
+ line number and character position.
+ .in -2
+@@ -330,7 +329,7 @@ Here\'s an example:
+ .PP
+ .in +2
+ .nf
+-$ comgt -v -d/dev/cua1 -s blah.scr
++$ comgt \-v \-d/dev/cua1 \-s blah.scr
+ comgt 00:18:46 -> Verbose output enabled
+ comgt 00:18:46 -> Script file: blah.scr
+ comgt 00:18:46 -> argc:5
+@@ -406,7 +405,7 @@ Here\'s an example:
+ .PP
+ .in +5
+ .nf
+-$ comgt -vs blar2.scr
++$ comgt \-vs blar2.scr
+ .fi
+ .in -5
+ .PP
+@@ -524,7 +523,7 @@ See Also    : dump, exit.
+ Command     : cd
+ Description : Change directory.
+ Syntax      : cd directory
+-Notes       : -1 is returned in % if the change could not be made.
++Notes       : \-1 is returned in % if the change could not be made.
+ Notes       : directory is a string and thus could be a variable.
+ See Also    : $cwd().
+ Example:
+@@ -573,11 +572,11 @@ See Also    : print.
+ 
+ Command     : exec
+ Description : Replaces current comgt process with another process.
+-Syntax      : exec "command -args..."
++Syntax      : exec "command \-args..."
+ See Also    : system, fork.
+ Example:
+               #Finished script, call cu.
+-              exec "cu -l "+$dev()+" -s "+$baud()
++              exec "cu \-l "+$dev()+" \-s "+$baud()
+ 
+ 
+ Command     : exit
+@@ -618,11 +617,11 @@ Description : forks comgt process in two
+ Description : executing the script.
+ Syntax      : fork
+ Notes       : % returns 0 for child process, new process ID for 
+-Notes       : parent or -1 for error.
++Notes       : parent or \-1 for error.
+ See Also    : wait, kill, pid(), ppid().
+ Example:
+               fork
+-              if % = -1 goto error
++              if % = \-1 goto error
+               if % = 0 goto child
+               :parent
+               ...
+@@ -725,7 +724,7 @@ Syntax      : kill signal processID
+ Notes       : Both signal and processID are integer values.  Same as 
+ Notes       : standard unix kill except that signal aliases are not 
+ Notes       : accepted and signal is not optional.
+-Notes       : 0 is returned in % if the signal could be sent, -1 
++Notes       : 0 is returned in % if the signal could be sent, \-1 
+ Notes       : otherwise.
+ Notes       : Signal 0 can be used to detect process existance.
+ See Also    : wait, pid(), ppid().
+@@ -899,7 +898,7 @@ See Also    : exec.
+ Example:
+               :dir
+               print "listing of directory ",$cwd(),\\n"
+-              system "ls -l |more"
++              system "ls \-l |more"
+ 
+ 
+ Command     : testkey
+@@ -940,14 +939,14 @@ Description : Waits until one of a list
+ Syntax      : waitfor timeout "string1","string2","string3"...
+ Notes       : Timeout is a floating time constant.  waitquiet returns
+ Notes       : 0 for the first string received, 1 for the second, etc...
+-Notes       : and -1 for a timeout.  Case is ignored by default unless
++Notes       : and \-1 for a timeout.  Case is ignored by default unless
+ Notes       : ignorecase is set to off.
+ See Also    : get.
+ Example:
+               :dial
+               send "atdt555-4411^m"
+               waitfor 60 "no carrier","busy","no dial tone","connect"
+-              if % = -1 goto timedout
++              if % = \-1 goto timedout
+               if % = 0 goto nocd
+               if % = 1 goto redial
+               if % = 2 goto error
+@@ -980,7 +979,7 @@ Notes       : existence, read, write and
+ Notes       : Under root id, the only useful check is \'f\', as
+ Notes       : all others will return true.
+ Return Value: 0 if the file exists, is readable, writable, 
+-Return Value: executable, or -1 if not.
++Return Value: executable, or \-1 if not.
+ See Also    : man access(2)
+ 
+ I-Function  : baud
+@@ -1058,7 +1057,7 @@ See Also    : cd.
+ S-Function  : dev
+ Description : Returns current communication device pathname.
+ Syntax      : let $x=$dev()
+-Notes       : defined by "-d" command line argument or "open com"
++Notes       : defined by "\-d" command line argument or "open com"
+ See Also    : open com.
+ 
+ S-Function  : dirname
+@@ -1177,7 +1176,7 @@ that "set ignorecase on" does NOT apply
+ Operator  Description      Example           Result
+ +         Addition         let a=2+2         4
+ +         Concatenation    let $b="aa"+"bb"  "aabb"
+--         Substraction     let e=2-5         -3
++\-         Substraction     let e=2-5         \-3
+ *         Multiplication   let f=11*2        22
+ /         Division         let g=34/11       3
+ &         Bit-Wise AND     let h=42&7        2
+@@ -1201,7 +1200,7 @@ let a=(val(mid$($t,11,2))*3600)+(val(mid
+ #5-2 will give you 3.
+ .PP
+ #Concatenation  (Calls cu)
+-exec "cu -l "+$dev()+" -s "+$baud()"
++exec "cu \-l "+$dev()+" \-s "+$baud()"
+ .PP
+ #In a test condition
+ if a+c > strlen($c) goto toomuch
+--- /dev/null
++++ comgt-0.32/gcom
+@@ -0,0 +1,4 @@
++#!/bin/sh
++
++echo "For trademark reasons the program name has been changed from gcom
++to comgt! Please use the comgt binary."
+--- /dev/null
++++ comgt-0.32/sigmon
+@@ -0,0 +1,54 @@
++#!/bin/sh
++#
++# sigmon - 3G/GPRS datacard signal strength monitor
++#
++# $Id: sigmon,v 1.1 2006/10/20 14:19:54 pharscape Exp $
++#
++
++if [ $# -eq 1 ]
++then
++	if [ "$1" = '-?' ] 
++	then
++		echo "Syntax:   sigmon"
++		echo "Function: 3G/GPRS datacard signal strength monitor"
++		echo "Options:  none"
++	else
++		echo "Invalid option - $1"
++	fi
++	exit 1
++else
++	if [ $# -gt 1 ]
++	then
++		echo "Error: only one option permitted"
++		exit 1
++	fi
++fi
++
++echo "Use Ctrl/C to terminate monitoring"
++
++while true
++do
++	comgt -d /dev/ttyUSB2 sig
++	sleep 5
++done
++#
++#   sigmon - use comgt to continuously monitor signal strength
++#   Copyright (C) 2005  Martin Gregorie
++#
++#   This program is free software; you can redistribute it and/or modify
++#   it under the terms of the GNU General Public License as published by
++#   the Free Software Foundation; either version 2 of the License, or
++#   (at your option) any later version.
++#
++#    This program is distributed in the hope that it will be useful,
++#    but WITHOUT ANY WARRANTY; without even the implied warranty of
++#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#    GNU General Public License for more details.
++#
++#    You should have received a copy of the GNU General Public License
++#    along with this program; if not, write to the Free Software
++#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++#
++#    martin@gregorie.org
++#
++
+--- comgt-0.32.orig/sigmon.1
++++ comgt-0.32/sigmon.1
+@@ -1,7 +1,6 @@
+ .\" Paul Hardwick 
+ .\" paul@peck.org.uk
+ .TH sigmon 1 "22 January, 2005"
+-.LO 1
+ .SH NAME
+ sigmon \- Vodafone 3G/GPRS datacard signal strength monitor
+ .SH SYNOPSIS

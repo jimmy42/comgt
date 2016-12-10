@@ -1,3 +1,17 @@
+comgt (0.32-3) unstable; urgency=medium
+
+  * Changed control file to only build package comgt and not gcom any
+    longer (and removed file gcom.links).
+  * Changed Conflicts and Replaces fields to not include any version
+    numbers (Closes: #792852).
+  * Rewrote debian/rules to use the newer simpler format (Closes: #821974)
+  * Switched to source format 3.0 (quilt) and created one single patch
+    for the Debian changes.
+  * Bumped standards version to 3.9.8 and debhelper compat to 9.
+  * Changed maintainer's email address.
+
+ -- Andreas "Jimmy" Gredler <jimmy@grml.org>  Fri, 09 Dec 2016 18:19:50 -0800
+
 comgt (0.32-2) unstable; urgency=low
 
   * Updated Conflicts and Replaces fields which were referring to the

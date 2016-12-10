@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Andreas "Jimmy" Gredler <jimmy@grml.org>
 Build-Depends: debhelper (>= 9.0.0)
-Standards-Version: 3.9.7
+Standards-Version: 3.9.8
 Homepage: http://www.pharscape.org/
 
 Package: comgt
